@@ -22,16 +22,18 @@ func main() {
 		fmt.Println("Error al leer los valores:", err)
 	}
 
-	fmt.Println(b)
-
-	// B := int(math.Pow(float64(g), float64(b))) % p
-
 	B := modularExponentiation(g, p, b)
+	Sa := modularExponentiation(A, p, b)
+	Sb := modularExponentiation(B, p, a)
 
-	fmt.Printf("\nB is %d\n", B)
-	fmt.Printf("A is %d", A)
+	fmt.Printf("B is %d\n", B)
+	fmt.Printf("A is %d\n", A)
 
-	fmt.Println(a)
+	if Sa == Sb {
+		fmt.Printf("S is %d", Sa)
+	} else {
+		panic("ALgo salio mal")
+	}
 
 }
 
