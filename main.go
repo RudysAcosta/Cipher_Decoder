@@ -2,25 +2,37 @@ package main
 
 import (
 	"fmt"
+	"log"
 )
 
+func readInput(format string, vars ...interface{}) {
+	_, err := fmt.Scanf(format, vars...)
+	if err != nil {
+		log.Fatalf("Error al leer los valores: %v", err)
+	}
+}
+
+// Exponenciación modular por cuadrados
+func modularExponentiation(base, mod, exp int) int {
+	result := 1
+	base = base % mod
+	for exp > 0 {
+		if exp%2 == 1 {
+			result = (result * base) % mod
+		}
+		base = (base * base) % mod
+		exp = exp / 2
+	}
+	return result
+}
+
 func main() {
-	a, b := 21, 15
 	var g, p, A int
+	a, b := 21, 15
 
-	_, err := fmt.Scanf("g is %d and p is %d", &g, &p)
-
-	if err != nil {
-		fmt.Println("Error al leer los valores:", err)
-	} else {
-		fmt.Printf("OK\n")
-	}
-
-	_, err = fmt.Scanf("A is %d", &A)
-
-	if err != nil {
-		fmt.Println("Error al leer los valores:", err)
-	}
+	readInput("g is %d and p is %d", &g, &p)
+	fmt.Println("OK")
+	readInput("A is %d", &A)
 
 	B := modularExponentiation(g, p, b)
 	Sa := modularExponentiation(A, p, b)
@@ -30,19 +42,8 @@ func main() {
 	fmt.Printf("A is %d\n", A)
 
 	if Sa == Sb {
-		fmt.Printf("S is %d", Sa)
+		fmt.Printf("S is %d\n", Sa)
 	} else {
-		panic("ALgo salio mal")
+		log.Fatal("Algo salió mal: Sa y Sb no coinciden")
 	}
-
-}
-
-func modularExponentiation(g, p, limit int) int {
-	c := 1
-
-	for i := 0; i < limit; i++ {
-		c = (c * g) % p
-	}
-
-	return c
 }
