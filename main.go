@@ -15,7 +15,6 @@ func readInput(format string, vars ...interface{}) {
 	}
 }
 
-// Exponenciación modular por cuadrados
 func modularExponentiation(base, mod, exp int) int {
 	result := 1
 	base = base % mod
@@ -29,17 +28,16 @@ func modularExponentiation(base, mod, exp int) int {
 	return result
 }
 
-// Función de cifrado César que cifra o descifra un texto con un desplazamiento
 func caesarCipher(text string, shift int) string {
 	var result strings.Builder
-	shift = (shift%26 + 26) % 26 // Asegura que el desplazamiento sea positivo entre 0 y 25
+	shift = (shift%26 + 26) % 26
 	for _, char := range text {
 		if char >= 'a' && char <= 'z' {
 			result.WriteRune('a' + (char-'a'+rune(shift))%26)
 		} else if char >= 'A' && char <= 'Z' {
 			result.WriteRune('A' + (char-'A'+rune(shift))%26)
 		} else {
-			result.WriteRune(char) // Deja caracteres especiales sin cambio
+			result.WriteRune(char)
 		}
 	}
 	return result.String()
@@ -47,35 +45,28 @@ func caesarCipher(text string, shift int) string {
 
 func main() {
 	var g, p, A int
-	b := 7 // Valor secreto de Bob según el ejemplo
+	b := 7
 
-	// Paso 1: Leer g y p, y mostrar "OK"
 	readInput("g is %d and p is %d", &g, &p)
 	fmt.Println("OK")
 
-	// Paso 2: Leer A y calcular B y el secreto compartido S
 	readInput("A is %d", &A)
 	B := modularExponentiation(g, p, b)
-	S := modularExponentiation(A, p, b) // Secreto compartido
+	S := modularExponentiation(A, p, b)
 
-	// Imprimir B como se especifica
 	fmt.Printf("B is %d\n", B)
 
-	// Paso 3: Usar el secreto compartido S como desplazamiento para el cifrado César
-	secretShift := S % 26 // Ajuste del desplazamiento para el cifrado
+	secretShift := S % 26
 
-	// Cifrar el mensaje "Will you marry me?" usando el cifrado César
 	message := "Will you marry me?"
 	encryptedMessage := caesarCipher(message, secretShift)
 	fmt.Println(encryptedMessage)
 
-	// Paso 4: Leer la respuesta de Alice, descifrar y responder adecuadamente
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
 		response := scanner.Text()
-		decodedResponse := caesarCipher(response, -secretShift) // Usar -shift para descifrar
+		decodedResponse := caesarCipher(response, -secretShift)
 
-		// Evaluar y responder en función del mensaje de Alice
 		switch decodedResponse {
 		case "Yeah, okay!":
 			reply := caesarCipher("Great!", secretShift)
